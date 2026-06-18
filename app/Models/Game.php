@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Game extends Model
 {
@@ -11,23 +13,33 @@ class Game extends Model
     protected $fillable = [
         'user_id',
         'friend_id',
-        'current_player_id',
         'winner_id',
         'secret_word',
         'status',
-        'created_at',
-        'updated_at',
     ];
 
-    public function user(){
-        return $this->belongsTo(User::class);
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function friend(){
-        return $this->belongsTo(User::class);
+    public function friend(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'friend_id');
     }
 
-    public function winner(){
-        return $this->belongsTo(User::class);
+    public function winner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'winner_id');
+    }
+
+    public function guesses(): HasMany
+    {
+        return $this->hasMany(Guesses::class, 'game_id');
+    }
+
+    public function invite(): HasMany
+    {
+        return $this->hasMany(GameInvite::class, 'game_id');
     }
 }
